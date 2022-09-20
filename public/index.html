@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const lat = position.coords.latitude;
+          //console.log(lat);
+          const long = position.coords.longitude;
+          document.getElementById("longitude").textContent = long;
+          document.getElementById("latitude").textContent = lat;
+
+          document
+            .getElementById("mylocation")
+            .addEventListener("click", async function (e) {
+              const cityName = document.getElementById("city").value;
+              const data = { lat, long, cityName };
+              options = {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              };
+
+              const response = await fetch("/api", options);
+              const json = await response.json();
+              console.log(json);
+            });
+        });
+      } else {
+        console.log("gapi is not available");
+      }
+    </script>
+    <h1>Hello!</h1>
+    Long:<span id="longitude"></span>&deg;<br />
+    Lat:<span id="latitude"></span>&deg; <br /><br />
+    <label for="location">Your favourite city:</label>
+    <input type="text" placeholder="Your City" id="city" />
+    <button id="mylocation">Submit</button>
+  </body>
+</html>
